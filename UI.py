@@ -5,12 +5,17 @@ from PyQt5.QtGui import QFont, QPixmap, QPainter, QColor
 
 class UI(QWidget):
 
-    def __init__(self, parent, controller=None, player_color='r'):
+    def __init__(self, parent, controller=None, start=None, first=True):
         super().__init__(parent)
+        self.first = first
         self.length = 68
         self.x_offset = 60
         self.y_offset = 20
-        self.player_color = player_color
+        self.start = start
+        if first:
+            self.player_color = 'r'
+        else:
+            self.player_color = 'b'
         self.Controller = controller
         self.Controller.UI = self
         self.piece_dict = {}
@@ -25,6 +30,34 @@ class UI(QWidget):
         bg.setPixmap(QPixmap("img/bg.png"))
         bg.move(10, 10)
 
+        comboBox = QComboBox(self)
+        comboBox.addItem("choose endgame")
+        comboBox.addItem("Endgame1")
+        comboBox.addItem("Endgame2")
+        comboBox.addItem("Endgame3")
+        comboBox.addItem("Endgame4")
+        comboBox.addItem("Endgame5")
+        comboBox.addItem("Endgame6")
+        comboBox.addItem("Endgame7")
+        comboBox.addItem("Endgame8")
+        comboBox.addItem("Endgame9")
+        comboBox.addItem("Endgame10")
+        comboBox.activated[str].connect(self.EndgameChoice)
+        comboBox.move(820, 450)
+
+        # two buttons
+        offensive_restart = QPushButton("Offensive Restart", self)
+        offensive_restart.setFont(QFont('SansSerif', 12))
+        offensive_restart.resize(150, 70)
+        offensive_restart.move(800, 250)
+        offensive_restart.clicked.connect(self.OffensiveRestart)
+
+        defensive_restart = QPushButton("Defensive Restart", self)
+        defensive_restart.setFont(QFont('SansSerif', 12))
+        defensive_restart.resize(150, 70)
+        defensive_restart.move(800, 350)
+        defensive_restart.clicked.connect(self.DeffensiveRestart)
+
         shadow = QLabel(self)
         shadow.setPixmap(QPixmap('img/shadow.png'))
         self.Controller.shadow = shadow
@@ -38,7 +71,7 @@ class UI(QWidget):
             for col in range(9):
                 if self.Controller.board[row][col] != 0:
                     if self.player_color == 'r':
-                        if self.Controller.board[row][col][0] == 'p':
+                        if self.Controller.board[row][col][0] == 'd':
                             piece = QLabel(self)
                             piece_name = 'r' + self.Controller.board[row][col][1]
                             piece.setPixmap(QPixmap('img/' + piece_name + '.png'))
@@ -49,7 +82,7 @@ class UI(QWidget):
                             piece.setPixmap(QPixmap('img/' + piece_name + '.png'))
                             piece.move(col * self.length + self.x_offset, row * self.length + self.y_offset)
                     else:
-                        if self.Controller.board[row][col][0] == 'c':
+                        if self.Controller.board[row][col][0] == 'u':
                             piece = QLabel(self)
                             piece_name = 'r' + self.Controller.board[row][col][1]
                             piece.setPixmap(QPixmap('img/' + piece_name + '.png'))
@@ -70,8 +103,9 @@ class UI(QWidget):
         if row >= 0 and row <= 9 and col >= 0 and col <= 8:
             if self.Controller.last_clicked is None:
                 if self.Controller.board[row][col] != 0:
-                    self.update_mark((row, col))
-                    self.Controller.last_clicked = (row, col)
+                    if self.Controller.board[row][col][0] == 'd':
+                        self.update_mark((row, col))
+                        self.Controller.last_clicked = (row, col)
             # have clicked some piece before
             else:
                 # if click the board
@@ -116,3 +150,14 @@ class UI(QWidget):
         self.Controller.last_clicked = None
         self.update_shadow(current_move=old_position)
         self.update_mark()
+
+    def EndgameChoice(self, text):
+        if text != "choose initial game":
+            self.start.init_new_game(board_name=text)
+
+    # restart button function
+    def OffensiveRestart(self):
+        self.start.init_new_game()
+
+    def DeffensiveRestart(self):
+        self.start.init_new_game(first=False)
