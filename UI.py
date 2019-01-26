@@ -43,7 +43,7 @@ class UI(QWidget):
         comboBox.addItem("Endgame9")
         comboBox.addItem("Endgame10")
         comboBox.activated[str].connect(self.EndgameChoice)
-        comboBox.move(820, 450)
+        comboBox.move(820, 200)
 
         # two buttons
         offensive_restart = QPushButton("Offensive Restart", self)
@@ -57,6 +57,13 @@ class UI(QWidget):
         defensive_restart.resize(150, 70)
         defensive_restart.move(800, 350)
         defensive_restart.clicked.connect(self.DeffensiveRestart)
+
+        # take back
+        offensive_restart = QPushButton("take back", self)
+        offensive_restart.setFont(QFont('SansSerif', 12))
+        offensive_restart.resize(150, 70)
+        offensive_restart.move(800, 450)
+        offensive_restart.clicked.connect(self.OffensiveRestart)
 
         shadow = QLabel(self)
         shadow.setPixmap(QPixmap('img/shadow.png'))

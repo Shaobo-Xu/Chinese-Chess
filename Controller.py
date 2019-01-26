@@ -52,9 +52,9 @@ class Controller:
         else:
             self.UI.move_piece(old_position=piece_position, new_position=next_position)
             self.move_piece(old_position=piece_position, new_position=next_position)
-
+        self.change_side()
 
     def new_game(self, first=True):
         if not first:
+            self.change_side()
             self.AI_move()
-

@@ -17,15 +17,12 @@ class SimpleAI:
                 if board[i][j] != 0:
                     pieces_alive += 1
         # the real depth is SearchDepth+1
-        # if pieces_alive < 9:
-        #     SearchDepth = 4
-        # elif pieces_alive < 20:
-        #     SearchDepth = 3
-        # elif pieces_alive < 30:
-        #     SearchDepth = 2
-        # else:
-        #     SearchDepth = 1
-        SearchDepth = 1
+        if pieces_alive < 12:
+            SearchDepth = 3
+        elif pieces_alive < 22:
+            SearchDepth = 2
+        else:
+            SearchDepth = 1
         max_value = float('-inf')
         piece_position = None
         next_position = None
@@ -51,14 +48,20 @@ class SimpleAI:
     def alpha_beta_search(self, node=None, SearchDepth=None, alpha=float('-inf'), beta=float('inf'),
                           maximizingPlayer=False):
         if SearchDepth == 0:
-            return self.evaluate_score(node=node, score_side='u')
+            value = self.evaluate_score(node=node, score_side='u')
+            # print('leaf node, value is: ', value)
+            return value
         node_has_child = node.has_child()
         if not node_has_child:
-            return self.evaluate_score(node=node, score_side='u')
+            value = self.evaluate_score(node=node, score_side='u')
+            # print('no child node, value is: ', value)
+            return value
         for child in node.child:
             if maximizingPlayer:
+                # print('next is alpha,this is ', node.board[node.new_position[0]][node.new_position[1]])
                 alpha = max(alpha, self.alpha_beta_search(child, SearchDepth - 1, alpha, beta, False))
             else:
+                # print('next is beta,this is ', node.board[node.new_position[0]][node.new_position[1]])
                 beta = min(beta, self.alpha_beta_search(child, SearchDepth - 1, alpha, beta, True))
             if alpha >= beta:
                 break
@@ -102,7 +105,7 @@ class SimpleAI:
                             [0, 2, 4, 4, -2, 4, 4, 2, 0],
                             [0, -4, 0, 0, 0, 0, 0, -4, 0]]
 
-        p_position_score = [[6, 4, 0, -10, -12, -10, 0, 4, 6],
+        p_position_score = [[6, -8, 0, -10, -12, -10, 0, -8, 6],
                             [2, 2, 0, -4, -14, -4, 0, 2, 2],
                             [2, 2, 0, -10, -8, -10, 0, 2, 2],
                             [0, 0, -2, 4, 10, 4, -2, 0, 0],
@@ -125,20 +128,19 @@ class SimpleAI:
                             [0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
         # piece value
-        j_score = 270
-        p_score = 135
-        m_score = 120
-        z_score = 30
-        x_score = 60
-        s_score = 60
+        j_score = 400
+        m_score = 180
+        p_score = 210
+        z_score = 45
+        x_score = 90
+        s_score = 90
         k_score = 1000000
 
         if Name[0] == 'd':
             row = Position[0]
-            column = Position[1]
         else:
             row = 9 - Position[0]
-            column = Position[1]
+        column = Position[1]
         if Name[0] == ScoreColor:
             sgn = 1
         else:
