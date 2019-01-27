@@ -1,6 +1,5 @@
 from Rules import Rules
 from AI import SimpleAI
-from PyQt5.QtCore import QThread
 
 
 class Controller:
@@ -16,7 +15,6 @@ class Controller:
         self.eat_history = []
         self.old_position_history = []
         self.new_position_history = []
-        self.AI_thread = AIThread(controller=self)
 
     def act(self, old_position=None, new_position=None):
         rules = Rules()
@@ -38,6 +36,8 @@ class Controller:
                 self.UI.eat_piece(predator=old_position, prey=new_position)
                 self.eat_piece(predator=old_position, prey=new_position)
             self.AI_thread.start()
+            if not end:
+                self.AI_move()
             self.change_side()
 
     def move_piece(self, old_position=None, new_position=None):
@@ -57,45 +57,31 @@ class Controller:
             self.CurrentPlayer = 'u'
 
     def AI_move(self):
-        # if move
         if self.board[new_position[0]][new_position[1]] == 0:
-            self.old_position_history.append(old_position)
             self.new_position_history.append(new_position)
             self.eat_history.append(False)
-            self.UI.move_piece(old_position=old_position, new_position=new_position)
             self.move_piece(old_position=old_position, new_position=new_position)
-
+        piece_position, next_position = self.AI.move(board=self.board)
         # eat
+        if self.board[next_position[0]][next_position[1]] != 0:
+            self.old_position_history.append(piece_position)
+            self.new_position_history.append(next_position)
+            self.eat_history.append(self.board[next_position[0]][next_position[1]])
+            self.UI.eat_piece(predator=piece_position, prey=next_position)
+            self.eat_piece(predator=piece_position, prey=next_position)
+        # move
         else:
-            self.old_position_history.append(old_position)
-            self.new_position_history.append(new_position)
-            self.eat_history.append(self.board[new_position[0]][new_position[1]])
-            self.UI.eat_piece(predator=old_position, prey=new_position)
-            self.eat_piece(predator=old_position, prey=new_position)
-        z
-        end = self.is_end()
-        if not end:
-            piece_position, next_position = self.AI.move(board=self.board)
-            # eat
-            if self.board[next_position[0]][next_position[1]] != 0:
-                self.old_position_history.append(piece_position)
-                self.new_position_history.append(next_position)
-                self.eat_history.append(self.board[next_position[0]][next_position[1]])
-                self.UI.eat_piece(predator=piece_position, prey=next_position)
-                self.eat_piece(predator=piece_position, prey=next_position)
-            # move
-            else:
-                self.old_position_history.append(piece_position)
-                self.new_position_history.append(next_position)
-                self.eat_history.append(False)
-                self.UI.move_piece(old_position=piece_position, new_position=next_position)
-                self.move_piece(old_position=piece_position, new_position=next_position)
-            self.change_side()
+            self.old_position_history.append(piece_position)
+            self.new_position_history.append(next_position)
+            self.eat_history.append(False)
+            self.UI.move_piece(old_position=piece_position, new_position=next_position)
+            self.move_piece(old_position=piece_position, new_position=next_position)
+        self.change_side()
 
     def new_game(self, first=True):
         if not first:
             self.change_side()
-            self.AI_thread.start()
+            self.AI_move()
 
     def take_back(self):
         if self.CurrentPlayer == 'd':
@@ -129,13 +115,3 @@ class Controller:
                         live_boss += 1
         if live_boss != 2:
             return True
-
-
-class AIThread(QThread):
-    def __init__(self, controller=None):
-        super().__init__()
-        self.controller = controller
-
-    def run(self):
-        # self.ctrl.view.update()
-        self.controller.AI_move()

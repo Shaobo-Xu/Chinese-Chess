@@ -16,13 +16,13 @@ class SimpleAI:
             for j in range(9):
                 if board[i][j] != 0:
                     pieces_alive += 1
+
         # the real depth is SearchDepth+1
-        if pieces_alive < 12:
-            SearchDepth = 3
-        elif pieces_alive < 22:
+        if pieces_alive < 26:
             SearchDepth = 2
         else:
             SearchDepth = 1
+
         max_value = float('-inf')
         piece_position = None
         next_position = None
@@ -34,10 +34,9 @@ class SimpleAI:
                         for move in possible_moves:
                             new_board = deepcopy(board)
                             node = Node(board=new_board, current_side=self.controller.CurrentPlayer,
-                                        old_position=(i, j),
-                                        new_position=move)
+                                        old_position=(i, j), new_position=move)
                             # for each possible move of each piece, do alpha-beta search
-                            value = self.alpha_beta_search(node=node, SearchDepth=SearchDepth)
+                            value = self.alpha_beta_search(node=node, SearchDepth=SearchDepth, maximizingPlayer=False)
                             if value > max_value:
                                 max_value = value
                                 piece_position = (i, j)
@@ -46,22 +45,19 @@ class SimpleAI:
 
     # alpha-beta search
     def alpha_beta_search(self, node=None, SearchDepth=None, alpha=float('-inf'), beta=float('inf'),
-                          maximizingPlayer=False):
+                          maximizingPlayer=True):
         if SearchDepth == 0:
             value = self.evaluate_score(node=node, score_side='u')
-            # print('leaf node, value is: ', value)
             return value
         node_has_child = node.has_child()
         if not node_has_child:
             value = self.evaluate_score(node=node, score_side='u')
-            # print('no child node, value is: ', value)
             return value
+
         for child in node.child:
             if maximizingPlayer:
-                # print('next is alpha,this is ', node.board[node.new_position[0]][node.new_position[1]])
                 alpha = max(alpha, self.alpha_beta_search(child, SearchDepth - 1, alpha, beta, False))
             else:
-                # print('next is beta,this is ', node.board[node.new_position[0]][node.new_position[1]])
                 beta = min(beta, self.alpha_beta_search(child, SearchDepth - 1, alpha, beta, True))
             if alpha >= beta:
                 break
@@ -176,9 +172,9 @@ class Node:
     # if this node has child, return true and generate the childs
     def has_child(self):
         rules = Rules()
+
         # if this is the end, then don't do further search
         live_boss = 0
-
         for i in range(10):
             for j in range(9):
                 if self.board[i][j] != 0:
@@ -197,8 +193,8 @@ class Node:
                             new_board = deepcopy(self.board)
                             node = Node(board=new_board, current_side=self.current_side, old_position=(i, j),
                                         new_position=move)
-                            node.parent = self
                             self.child.append(node)
+                            node.parent = self
         return True
 
     def get_next_player(self):
