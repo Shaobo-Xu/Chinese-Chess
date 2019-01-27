@@ -13,38 +13,32 @@ class Controller:
         self.CurrentPlayer = 'd'
         self.AI = SimpleAI(controller=self)
         self.board = board
-
         self.eat_history = []
         self.old_position_history = []
         self.new_position_history = []
-        self.new_position_for_thread = None
-        self.old_position_for_thread = None
         self.AI_thread = AIThread(controller=self)
-
 
     def act(self, old_position=None, new_position=None):
         rules = Rules()
         possible_moves = rules.get_possible_moves(board=self.board, position=old_position)
         if new_position in possible_moves:
-            self.new_position_for_thread = new_position
-            self.old_position_for_thread = old_position
             # if move
             if self.board[new_position[0]][new_position[1]] == 0:
+                self.old_position_history.append(old_position)
+                self.new_position_history.append(new_position)
+                self.eat_history.append(False)
                 self.UI.move_piece(old_position=old_position, new_position=new_position)
-
-            # eat
-            else:
-                self.UI.eat_piece(predator=old_position, prey=new_position)
-
-            self.AI_thread.start()
-
                 self.move_piece(old_position=old_position, new_position=new_position)
+
             # eat
             else:
+                self.old_position_history.append(old_position)
+                self.new_position_history.append(new_position)
+                self.eat_history.append(self.board[new_position[0]][new_position[1]])
                 self.UI.eat_piece(predator=old_position, prey=new_position)
                 self.eat_piece(predator=old_position, prey=new_position)
+            self.AI_thread.start()
             self.change_side()
-            self.AI_move()
 
     def move_piece(self, old_position=None, new_position=None):
         piece_name = self.board[old_position[0]][old_position[1]]
@@ -63,14 +57,12 @@ class Controller:
             self.CurrentPlayer = 'u'
 
     def AI_move(self):
-        new_position = self.new_position_for_thread
-        old_position = self.old_position_for_thread
-
         # if move
         if self.board[new_position[0]][new_position[1]] == 0:
             self.old_position_history.append(old_position)
             self.new_position_history.append(new_position)
             self.eat_history.append(False)
+            self.UI.move_piece(old_position=old_position, new_position=new_position)
             self.move_piece(old_position=old_position, new_position=new_position)
 
         # eat
@@ -78,7 +70,9 @@ class Controller:
             self.old_position_history.append(old_position)
             self.new_position_history.append(new_position)
             self.eat_history.append(self.board[new_position[0]][new_position[1]])
+            self.UI.eat_piece(predator=old_position, prey=new_position)
             self.eat_piece(predator=old_position, prey=new_position)
+        z
         end = self.is_end()
         if not end:
             piece_position, next_position = self.AI.move(board=self.board)
@@ -98,20 +92,9 @@ class Controller:
                 self.move_piece(old_position=piece_position, new_position=next_position)
             self.change_side()
 
-        piece_position, next_position = self.AI.move(board=self.board)
-        if self.board[next_position[0]][next_position[1]] != 0:
-            self.UI.eat_piece(predator=piece_position, prey=next_position)
-            self.eat_piece(predator=piece_position, prey=next_position)
-        else:
-            self.UI.move_piece(old_position=piece_position, new_position=next_position)
-            self.move_piece(old_position=piece_position, new_position=next_position)
-        self.change_side()
-
-
     def new_game(self, first=True):
         if not first:
             self.change_side()
-
             self.AI_thread.start()
 
     def take_back(self):
@@ -156,4 +139,3 @@ class AIThread(QThread):
     def run(self):
         # self.ctrl.view.update()
         self.controller.AI_move()
-

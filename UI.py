@@ -63,7 +63,7 @@ class UI(QWidget):
         offensive_restart.setFont(QFont('SansSerif', 12))
         offensive_restart.resize(150, 70)
         offensive_restart.move(800, 450)
-        offensive_restart.clicked.connect(self.OffensiveRestart)
+        offensive_restart.clicked.connect(self.takeback)
 
         shadow = QLabel(self)
         shadow.setPixmap(QPixmap('img/shadow.png'))
@@ -109,29 +109,31 @@ class UI(QWidget):
 
     def simple_ui_control(self, row=None, col=None):
         if row >= 0 and row <= 9 and col >= 0 and col <= 8:
-            if self.Controller.last_clicked is None:
-                if self.Controller.board[row][col] != 0:
-                    if self.Controller.board[row][col][0] == 'd':
-                        self.update_mark((row, col))
-                        self.Controller.last_clicked = (row, col)
-            # have clicked some piece before
-            else:
-                # if click the board
-                if self.Controller.board[row][col] == 0:
-                    self.Controller.act(self.Controller.last_clicked, (row, col))
-                else:
-                    # if two clicks are of the same side
-                    if self.Controller.board[self.Controller.last_clicked[0]][self.Controller.last_clicked[1]][0] == \
-                            self.Controller.board[row][col][0]:
-                        # if click the same piece
-                        if (row, col) == self.Controller.last_clicked:
-                            self.Controller.last_clicked = None
-                            self.update_mark((-50, -50))
-                        else:
+            end = self.Controller.is_end()
+            if not end:
+                if self.Controller.last_clicked is None:
+                    if self.Controller.board[row][col] != 0:
+                        if self.Controller.board[row][col][0] == 'd':
                             self.update_mark((row, col))
                             self.Controller.last_clicked = (row, col)
-                    else:
+                # have clicked some piece before
+                else:
+                    # if click the board
+                    if self.Controller.board[row][col] == 0:
                         self.Controller.act(self.Controller.last_clicked, (row, col))
+                    else:
+                        # if two clicks are of the same side
+                        if self.Controller.board[self.Controller.last_clicked[0]][self.Controller.last_clicked[1]][0] == \
+                                self.Controller.board[row][col][0]:
+                            # if click the same piece
+                            if (row, col) == self.Controller.last_clicked:
+                                self.Controller.last_clicked = None
+                                self.update_mark((-50, -50))
+                            else:
+                                self.update_mark((row, col))
+                                self.Controller.last_clicked = (row, col)
+                        else:
+                            self.Controller.act(self.Controller.last_clicked, (row, col))
 
     def update_shadow(self, current_move=(-200, -200)):
         self.Controller.shadow.move(current_move[1] * self.length + self.x_offset,
@@ -160,14 +162,9 @@ class UI(QWidget):
         self.update_mark()
 
     def EndgameChoice(self, text):
-<<<<<<< HEAD
         if self.Controller.CurrentPlayer == 'd':
             if text != "choose endgame":
                 self.start.init_new_game(board_name=text)
-=======
-        if text != "choose initial game":
-            self.start.init_new_game(board_name=text)
->>>>>>> parent of 0edd06c... 基本完工
 
     # restart button function
     def OffensiveRestart(self):
@@ -175,7 +172,6 @@ class UI(QWidget):
             self.start.init_new_game()
 
     def DeffensiveRestart(self):
-<<<<<<< HEAD
         if self.Controller.CurrentPlayer == 'd':
             self.start.init_new_game(first=False)
 
@@ -185,6 +181,3 @@ class UI(QWidget):
 
     def put_piece_back(self, name=None):
         self.piece_dict[name].setVisible(True)
-=======
-        self.start.init_new_game(first=False)
->>>>>>> parent of 0edd06c... 基本完工
