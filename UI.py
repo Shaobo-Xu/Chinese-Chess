@@ -102,9 +102,10 @@ class UI(QWidget):
                     self.piece_dict[self.Controller.board[row][col]] = piece
 
     def mousePressEvent(self, QMouseEvent):
-        col = round((QMouseEvent.x() - 96) / 68)
-        row = round((QMouseEvent.y() - 53) / 68)
-        self.simple_ui_control(row=row, col=col)
+        if self.Controller.CurrentPlayer == 'd':
+            col = round((QMouseEvent.x() - 96) / 68)
+            row = round((QMouseEvent.y() - 53) / 68)
+            self.simple_ui_control(row=row, col=col)
 
     def simple_ui_control(self, row=None, col=None):
         if row >= 0 and row <= 9 and col >= 0 and col <= 8:
@@ -161,18 +162,22 @@ class UI(QWidget):
         self.update_mark()
 
     def EndgameChoice(self, text):
-        if text != "choose endgame":
-            self.start.init_new_game(board_name=text)
+        if self.Controller.CurrentPlayer == 'd':
+            if text != "choose endgame":
+                self.start.init_new_game(board_name=text)
 
     # restart button function
     def OffensiveRestart(self):
-        self.start.init_new_game()
+        if self.Controller.CurrentPlayer == 'd':
+            self.start.init_new_game()
 
     def DeffensiveRestart(self):
-        self.start.init_new_game(first=False)
+        if self.Controller.CurrentPlayer == 'd':
+            self.start.init_new_game(first=False)
 
     def takeback(self):
-        self.Controller.take_back()
+        if self.Controller.CurrentPlayer == 'd':
+            self.Controller.take_back()
 
     def put_piece_back(self, name=None):
         self.piece_dict[name].setVisible(True)
