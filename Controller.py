@@ -13,15 +13,14 @@ class Controller:
         self.CurrentPlayer = 'd'
         self.AI = SimpleAI(controller=self)
         self.board = board
-<<<<<<< HEAD
+
         self.eat_history = []
         self.old_position_history = []
         self.new_position_history = []
         self.new_position_for_thread = None
         self.old_position_for_thread = None
         self.AI_thread = AIThread(controller=self)
-=======
->>>>>>> parent of 0edd06c... 基本完工
+
 
     def act(self, old_position=None, new_position=None):
         rules = Rules()
@@ -32,19 +31,18 @@ class Controller:
             # if move
             if self.board[new_position[0]][new_position[1]] == 0:
                 self.UI.move_piece(old_position=old_position, new_position=new_position)
-<<<<<<< HEAD
+
             # eat
             else:
                 self.UI.eat_piece(predator=old_position, prey=new_position)
 
             self.AI_thread.start()
-=======
+
                 self.move_piece(old_position=old_position, new_position=new_position)
             # eat
             else:
                 self.UI.eat_piece(predator=old_position, prey=new_position)
                 self.eat_piece(predator=old_position, prey=new_position)
->>>>>>> parent of 0edd06c... 基本完工
             self.change_side()
             self.AI_move()
 
@@ -65,7 +63,6 @@ class Controller:
             self.CurrentPlayer = 'u'
 
     def AI_move(self):
-<<<<<<< HEAD
         new_position = self.new_position_for_thread
         old_position = self.old_position_for_thread
 
@@ -100,7 +97,7 @@ class Controller:
                 self.UI.move_piece(old_position=piece_position, new_position=next_position)
                 self.move_piece(old_position=piece_position, new_position=next_position)
             self.change_side()
-=======
+
         piece_position, next_position = self.AI.move(board=self.board)
         if self.board[next_position[0]][next_position[1]] != 0:
             self.UI.eat_piece(predator=piece_position, prey=next_position)
@@ -109,12 +106,12 @@ class Controller:
             self.UI.move_piece(old_position=piece_position, new_position=next_position)
             self.move_piece(old_position=piece_position, new_position=next_position)
         self.change_side()
->>>>>>> parent of 0edd06c... 基本完工
+
 
     def new_game(self, first=True):
         if not first:
             self.change_side()
-<<<<<<< HEAD
+
             self.AI_thread.start()
 
     def take_back(self):
@@ -159,6 +156,4 @@ class AIThread(QThread):
     def run(self):
         # self.ctrl.view.update()
         self.controller.AI_move()
-=======
-            self.AI_move()
->>>>>>> parent of 0edd06c... 基本完工
+
