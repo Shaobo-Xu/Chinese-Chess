@@ -74,7 +74,7 @@ class ChineseChess(QMainWindow):
                      [0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 'uz1', 0, 'uz2', 0, 0],
-                     [0, 0, 0, 0, 0, 'dk0', 0, 0, 'dj0']]
+                     [0, 0, 0, 0, 0, 'dk0', 0, 0, 'dj1']]
             return board
         # ye ma cao tian
         if board_name == 'Endgame3':

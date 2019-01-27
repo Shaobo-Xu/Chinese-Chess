@@ -47,13 +47,13 @@ class UI(QWidget):
         comboBox.move(820, 200)
 
         # two buttons
-        offensive_restart = QPushButton("Offensive Restart", self)
+        offensive_restart = QPushButton("Offensive\nRestart", self)
         offensive_restart.setFont(QFont('SansSerif', 12))
         offensive_restart.resize(150, 70)
         offensive_restart.move(800, 250)
         offensive_restart.clicked.connect(self.OffensiveRestart)
 
-        defensive_restart = QPushButton("Defensive Restart", self)
+        defensive_restart = QPushButton("Defensive\nRestart", self)
         defensive_restart.setFont(QFont('SansSerif', 12))
         defensive_restart.resize(150, 70)
         defensive_restart.move(800, 350)
