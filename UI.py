@@ -32,6 +32,7 @@ class UI(QWidget):
 
         comboBox = QComboBox(self)
         comboBox.addItem("choose endgame")
+        comboBox.addItem("test")
         comboBox.addItem("Endgame1")
         comboBox.addItem("Endgame2")
         comboBox.addItem("Endgame3")

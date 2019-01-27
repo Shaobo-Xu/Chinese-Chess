@@ -57,6 +57,7 @@ class Controller:
             self.CurrentPlayer = 'u'
 
     def AI_move(self):
+        self.change_side()
         piece_position, next_position = self.AI.move(board=self.board)
         # eat
         if self.board[next_position[0]][next_position[1]] != 0:
@@ -72,7 +73,7 @@ class Controller:
             self.eat_history.append(False)
             self.UI.move_piece(old_position=piece_position, new_position=next_position)
             self.move_piece(old_position=piece_position, new_position=next_position)
-        self.change_side()
+
 
     def new_game(self, first=True):
         if not first:

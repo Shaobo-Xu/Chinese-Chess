@@ -26,6 +26,18 @@ class ChineseChess(QMainWindow):
         self.Controller.new_game(first=first)
 
     def get_board(self, board_name=None):
+        if board_name == 'test':
+            board = [[0, 0, 0, 0, 0, 0, 0, 0, 'uk0'],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 'up0', 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 'dz0'],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 'dp0', 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                     ['dj0', 'dm0', 0, 0, 0, 0, 0, 0, 'dk0']]
+            return board
         if board_name == 'default':
             board = [['uj0', 'um0', 'ux0', 'us0', 'uk0', 'us1', 'ux1', 'um1', 'uj1'],
                      [0, 0, 0, 0, 0, 0, 0, 0, 0],

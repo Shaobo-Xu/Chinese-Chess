@@ -18,11 +18,11 @@ class SimpleAI:
                     pieces_alive += 1
 
         # the real depth is SearchDepth+1
-        if pieces_alive < 26:
-            SearchDepth = 2
-        else:
-            SearchDepth = 1
-
+        # if pieces_alive < 26:
+        #     SearchDepth = 2
+        # else:
+        #     SearchDepth = 1
+        SearchDepth = 1
         max_value = float('-inf')
         piece_position = None
         next_position = None
@@ -48,6 +48,17 @@ class SimpleAI:
                           maximizingPlayer=True):
         if SearchDepth == 0:
             value = self.evaluate_score(node=node, score_side='u')
+            print('value: ', value)
+            print('old position: ', node.old_position)
+            print('new position: ', node.new_position)
+            print()
+            while node.parent:
+                print('old position: ', node.parent.old_position)
+                print('new position: ', node.parent.new_position)
+                node=node.parent
+                print()
+            print('-----------------------------------')
+
             return value
         node_has_child = node.has_child()
         if not node_has_child:
