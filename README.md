@@ -2,7 +2,9 @@
 
 一个基于python的中国象棋的UI以及AI(Alphabeta pruning)
 
-加入了部分endgame，可供测试及开发AI
+加入endgame，可供测试及开发AI
+
+加入悔棋，加入换边
 
 原出处是这里(java版)： https://github.com/geeeeeeeeek/IntelligentChineseChessSystem
 
