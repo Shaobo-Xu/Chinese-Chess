@@ -35,7 +35,7 @@ class Controller:
                 self.eat_history.append(self.board[new_position[0]][new_position[1]])
                 self.UI.eat_piece(predator=old_position, prey=new_position)
                 self.eat_piece(predator=old_position, prey=new_position)
-            self.AI_thread.start()
+            end = self.is_end()
             if not end:
                 self.AI_move()
             self.change_side()
@@ -57,10 +57,6 @@ class Controller:
             self.CurrentPlayer = 'u'
 
     def AI_move(self):
-        if self.board[new_position[0]][new_position[1]] == 0:
-            self.new_position_history.append(new_position)
-            self.eat_history.append(False)
-            self.move_piece(old_position=old_position, new_position=new_position)
         piece_position, next_position = self.AI.move(board=self.board)
         # eat
         if self.board[next_position[0]][next_position[1]] != 0:
