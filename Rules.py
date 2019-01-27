@@ -254,7 +254,7 @@ class Rules:
                     else:
                         if board[current_row_position][current_column_position] == 0:
                             continue
-                        elif board[current_row_position][current_column_position][1] == 'k':
+                        elif board[current_row_position][current_column_position][1] == 'b':
                             possible_moves.append((current_row_position, current_column_position))
                         else:
                             break
@@ -278,7 +278,7 @@ class Rules:
                     else:
                         if board[current_row_position][current_column_position] == 0:
                             continue
-                        elif board[current_row_position][current_column_position][1] == 'k':
+                        elif board[current_row_position][current_column_position][1] == 'b':
                             possible_moves.append((current_row_position, current_column_position))
                         else:
                             break
