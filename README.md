@@ -1,5 +1,7 @@
 # Chinese-Chess
 
+运行ChineseChess.py以开始
+
 ===============================================================================
 
 一个基于python的中国象棋的UI以及AI(Alphabeta pruning)
